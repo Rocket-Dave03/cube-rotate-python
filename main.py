@@ -34,11 +34,43 @@ def rotate(vert):
     return (new_x, new_y, new_z)
 
 
-verts = [(-1, -1, -1), (1, -1, -1), (1, 1, -1), (-1, 1, -1), (-1, -1, 1),
-         (1, -1, 1), (1, 1, 1), (-1, 1, 1)]
-edges = [(0, 1), (1, 2), (2, 3), (3, 0), (0, 4), (1, 5), (2, 6), (3, 7),
-         (4, 5), (5, 6), (6, 7), (7, 4)]
-scale_factor = 100
+
+def parse_vert(line: str) -> tuple[float, float, float]:
+    line = line[2:].strip()
+    parts = line.split(" ")
+    assert len(parts) == 3
+    return tuple([float(part) for part in parts])
+
+def parse_face(line: str) -> tuple[int, int, int, int]:
+    line = line[2:].strip()
+    parts = line.split(" ")
+    assert len(parts) == 4 or len(parts) == 3
+    return tuple([int(part)-1 for part in parts])
+
+verts = []
+edges = []
+filename = "./monkey.obj"
+with open(filename) as file:
+    for line in file.readlines():
+        match line[0]:
+            case "v":
+                verts.append(parse_vert(line))
+            case "f":
+                face = parse_face(line)
+                edges.append((face[0], face[1]))
+                edges.append((face[1], face[2]))
+                if len(face) == 4:
+                    edges.append((face[2], face[3]))
+                edges.append((face[-1], face[0]))
+            case _:
+               continue 
+
+
+# verts = [(-1, -1, -1), (1, -1, -1), (1, 1, -1), (-1, 1, -1), (-1, -1, 1),
+#          (1, -1, 1), (1, 1, 1), (-1, 1, 1)]
+# edges = [(0, 1), (1, 2), (2, 3), (3, 0), (0, 4), (1, 5), (2, 6), (3, 7),
+#          (4, 5), (5, 6), (6, 7), (7, 4)]
+scale_factor = 300
 
 
 def draw_edge(edge):
@@ -61,5 +93,5 @@ while True:
         draw_edge(edge)
     screen.update()
     t.clear()
-    yaw += (2*pi)/10000
+    yaw += (2*pi)/100
 
