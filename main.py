@@ -10,6 +10,7 @@ screen.setup(1.0, 1.0)
 t = turtle.Turtle()
 yaw = 0
 
+
 def rotate(vert):
     global yaw
     a = 0.75*yaw
