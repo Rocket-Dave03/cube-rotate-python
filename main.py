@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import turtle
+from datetime import datetime
 from math import cos, sin, pi
 
 # Fullscreen the canvas
@@ -13,9 +14,11 @@ yaw = 0
 
 def rotate(vert):
     global yaw
-    a = 0.75*yaw
+    # a = 0.75*yaw
+    a = 0
     b = yaw
-    c = pi*yaw/3
+    # c = pi*yaw/3
+    c = 0
     x = vert[0]
     y = vert[1]
     z = vert[2]
@@ -50,7 +53,7 @@ def parse_face(line: str) -> tuple[int, ...]:
 
 verts = []
 edges = []
-filename = "./newscene.obj"
+filename = "./v1.obj"
 with open(filename) as file:
     for line in file.readlines():
         match line[0]:
@@ -70,7 +73,8 @@ with open(filename) as file:
 #          (1, -1, 1), (1, 1, 1), (-1, 1, 1)]
 # edges = [(0, 1), (1, 2), (2, 3), (3, 0), (0, 4), (1, 5), (2, 6), (3, 7),
 #          (4, 5), (5, 6), (6, 7), (7, 4)]
-scale_factor = 0.2
+# scale_factor = 550
+scale_factor = 150
 
 
 def draw_edge(edge):
@@ -87,11 +91,14 @@ yaw = 0
 t.speed(0)
 t.hideturtle()
 screen.tracer(0)
+
+prev = datetime.now()
 while True:
 
     for edge in edges:
         draw_edge(edge)
     screen.update()
     t.clear()
-    yaw += (2*pi)/1000
+    yaw += ((2*pi)/10) * (datetime.now() - prev).total_seconds()
+    prev = datetime.now()
 
